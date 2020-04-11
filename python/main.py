@@ -15,7 +15,7 @@ def putText(img, text, color, x, y):
 
 def run(lineHeight, threshold, setCounter):
     showInfo(lineHeight, threshold, setCounter)
-    face_cascade = cv2.CascadeClassifier('Cascades/haarcascade_frontalface_default.xml')
+    face_cascade = cv2.CascadeClassifier('python/Cascades/haarcascade_frontalface_default.xml')
     cap = cv2.VideoCapture(0)
 
     #Variables
@@ -82,6 +82,58 @@ def run(lineHeight, threshold, setCounter):
 
     cap.release()
     cv2.destroyAllWindows()
+
+def runOnSingleFrame(img,lineHeight, threshold, setCounter, face_cascade, vidWidth, statusUp, statusDown, up, repCounter):
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    faces = face_cascade.detectMultiScale(gray, 1.1, 4)
+    for (x, y, w, h) in faces:
+        x2 = x+w
+        y2 = y+w
+        y3 = int((y+y2)/2)
+
+        if y3 < lineHeight:
+            statusUp.append(True)
+            statusDown.append(False)
+            if all(statusUp[-threshold:]):
+                if not up:
+                    repCounter += 1
+                    up = True
+                    print('UP')
+                    print(repCounter)
+                #print(statusUp[-threshold:])
+        else:
+            statusUp.append(False)
+            statusDown.append(True)
+            if all(statusDown[-threshold:]) and up:
+                up = False
+                print('Down')
+                #print(statusDown[-threshold:])
+        #cv2.rectangle(img, (x, y), (x2, y2), (255, 0, 0), 2)
+        img = cv2.line(img,(0,y3),(vidWidth,y3),(0,0,0),1)
+
+    if repCounter == setCounter:
+        print('Finished set',setCounter)
+        repCounter = 0
+        setCounter -= 1
+        print('Starting set', setCounter)
+
+    #if setCounter == 0:
+        #break
+
+    img = cv2.line(img,(0,lineHeight),(vidWidth,lineHeight),(0,0,0),1)
+    #img = cv2.putText(img, 'Rep Counter: '+str(repCounter), (100,300), cv2.FONT_HERSHEY_SIMPLEX,1,thickness=1,color=[255,255,255])
+    #img = cv2.putText(img, 'Set Counter: '+str(setCounter), (100,400), cv2.FONT_HERSHEY_SIMPLEX,1,thickness=1,color=[255,255,255])
+    putText(img, 'Rep Counter: '+str(repCounter),(0,0,0), 100,350)
+    putText(img, 'Set Counter: '+str(setCounter),(0,0,0), 100,400)
+    if up:
+        putText(img, 'Status: Up',(0,0,0), 250,400)
+        position = 'Up'
+    else:
+        putText(img, 'Status: Down',(0,0,0), 250,400)
+        position = 'Down'
+
+    return img, statusUp, statusDown, up, setCounter, repCounter, position
+
 
     '''
     Para eliminar los falsos positivos guardo las coordenadas del centro de la cara y solo grafico las que cambiaron dentro de 

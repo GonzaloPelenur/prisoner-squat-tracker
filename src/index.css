@@ -1,0 +1,43 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+}
+
+.centered {
+  text-align: center;
+  align-items: center;
+}
+
+.cent {
+  text-align: center;
+  align-items: center;
+  align-content: center;
+  justify-content: center;
+}
+.form-group {
+  width: 275px;
+  margin: 0px auto;
+}
+
+.input-group {
+  width: 275px;
+  margin: 0px auto;
+}
+
+.weather {
+  margin-top: 30px;
+}
+.jumbo {
+  padding: 20px;
+  background-color: lightblue;
+}
+.in {
+  padding: 50px;
+}
+.out {
+  padding: 50px;
+}
+.redbutton {
+  margin-left: 15px;
+}
