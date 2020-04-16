@@ -13,6 +13,7 @@ import {
   Button,
   InputGroupAddon,
   FormGroup,
+  Fade
 } from "reactstrap";
 import axios from "axios";
 
@@ -23,7 +24,8 @@ class App extends Component {
       status: 'Up',
       setCounter: 0,
       repCounter: 0,
-      startingSet:30
+      startingSet:30,
+      fadeIn:true
     }
   }
   
@@ -53,6 +55,7 @@ class App extends Component {
 
   runPython = () => {
     console.log('Call Python')
+    this.setState({fadeIn:false})
     fetch('http://127.0.0.1:5000/start', {method: "POST"})
     .then((response) => response.json())
     .then((responseData) =>
@@ -89,6 +92,9 @@ class App extends Component {
       <div>
         <Navbar dark color="dark">
           <NavbarBrand href="/"> Squat</NavbarBrand>
+          <Button className="but" color="primary" onClick={this.runPython}>
+            Start!
+          </Button>
         </Navbar>
         <Row>
           <Col xs={9} className="main"></Col>
@@ -100,22 +106,24 @@ class App extends Component {
               <h1 className="centered" id="bod">
                 {this.state.startingSet}
               </h1>
-              <InputGroup>
-                <Input 
-                  placeholder="Amount" 
-                  defaultValue={30}
-                  min={0} 
-                  max={100} 
-                  type="number" 
-                  step="1" 
-                  onChange={(e) => this.handleChangeText(`${e.target.value}`)} 
-                />
-                <InputGroupAddon addonType="prepend">
-                  <Button onClick={this.submitData}>
-                    Submit
-                  </Button>
-                </InputGroupAddon>
-              </InputGroup>
+              <Fade in={this.state.fadeIn} tag="h5" className="mt-3">
+                <InputGroup>
+                  <Input 
+                    placeholder="Amount" 
+                    defaultValue={30}
+                    min={0} 
+                    max={100} 
+                    type="number" 
+                    step="1" 
+                    onChange={(e) => this.handleChangeText(`${e.target.value}`)} 
+                  />
+                  <InputGroupAddon addonType="prepend">
+                    <Button onClick={this.submitData}>
+                      Submit
+                    </Button>
+                  </InputGroupAddon>
+                </InputGroup>
+              </Fade>
               
             </Col>
             <Col>
@@ -141,11 +149,6 @@ class App extends Component {
               <h1 className="centered" id="bod">
                 {this.state.repCounter}
               </h1>
-            </Col>
-            <Col className="centered">
-              <Button className="but" color="primary" onClick={this.runPython}>
-                Start!
-              </Button>
             </Col>
           </Col>
         </Row>
