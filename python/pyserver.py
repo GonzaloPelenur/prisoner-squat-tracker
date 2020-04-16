@@ -10,9 +10,9 @@ app = Flask(__name__)
 CORS(app)
 
 data = {
-    'lineHeight': 300,
-    'threshold': 10,
-    'setCounter': 3,
+    'lineHeight': 200,
+    'threshold': 5,
+    'setCounter': 30,
     'statusUp': [],
     'statusDown': [],
     'up': True,
@@ -44,11 +44,11 @@ def start():
         if setCounter == 0:
             break
         
-        #retval, buffer_img= cv2.imencode('.jpg', img)
+        imEncoded= cv2.imencode('.jpg', img)[1]
         #imgBase64 = base64.b64encode(buffer_img)
-        sendIm = np.copy(img).tolist()
+        #sendIm = np.copy(img).tolist()
         #-------Modify Data----------------------------------
-        data['img'] = sendIm
+        data['img'] = str(imEncoded)
         data['statusUp'] = statusUp
         data['statusDown'] = statusDown
         data['up'] = up
@@ -71,6 +71,20 @@ def start():
 @app.route("/data", methods=['GET', 'POST'])
 def handle_request():
     return data
+
+@app.route("/submitData", methods=['GET', 'POST'])
+def handle_request2():
+    print('Sumbit Data||||||||||||||||||||||||||||||||||||||||||||||')
+    req = request.args.get('startingSet')
+    try:
+        val = int(req)
+        data['setCounter'] = val
+        print(data)
+        return 'Success'
+    except Exception as e:
+        print(e)
+        return 'Failure'
+    
     
 if __name__ == "__main__":
     app.run(debug=True)
