@@ -74,7 +74,7 @@ def handle_request():
 
 @app.route("/submitData", methods=['GET', 'POST'])
 def handle_request2():
-    print('Sumbit Data||||||||||||||||||||||||||||||||||||||||||||||')
+    print('Sumbit Data')
     req = request.args.get('startingSet')
     try:
         val = int(req)

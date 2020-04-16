@@ -1,10 +1,15 @@
 import React, { Component } from "react";
-import logo from "./logo.svg";
 import "./App.css";
+import "./styles.css"
 import {
   Container,
   Navbar,
   NavbarBrand,
+  NavbarToggler,
+  Collapse,
+  Nav,
+  NavItem,
+  NavLink,
   Row,
   Col,
   Jumbotron,
@@ -15,9 +20,10 @@ import {
   FormGroup,
   Fade
 } from "reactstrap";
-import axios from "axios";
 
 class App extends Component {
+
+
   constructor(props) {
     super(props);
     this.state = {
@@ -25,7 +31,9 @@ class App extends Component {
       setCounter: 0,
       repCounter: 0,
       startingSet:30,
-      fadeIn:true
+      fadeIn:true,
+      collapsed:true,
+      setCollapsed:true
     }
   }
   
@@ -87,68 +95,84 @@ class App extends Component {
     this.setState({ startingSet: newText });
   }
 
+  toggleNavbar = ()=>{
+    this.setState({ 
+      collapsed: !this.state.collapsed
+    });
+  }
+  
+
   render(props) {
     return (
       <div>
         <Navbar dark color="dark">
-          <NavbarBrand href="/"> Squat</NavbarBrand>
-          <Button className="but" color="primary" onClick={this.runPython}>
+          <Button className="but" color="secondary" onClick={this.runPython}>
             Start!
           </Button>
+          <NavbarBrand href="/" >Prisoner Style Squat Workout</NavbarBrand>
+          <NavbarToggler onClick={this.toggleNavbar} className="mr-2" />
+          <Collapse isOpen={!this.state.collapsed} navbar>
+            <Nav navbar>
+              <Row className="test">
+                <Col>
+                  <h3 className="settingsH3">Starting Set:</h3>
+                  <InputGroup>
+                    <Input 
+                      placeholder="Amount" 
+                      defaultValue={30}
+                      min={0} 
+                      max={100} 
+                      type="number" 
+                      step="1" 
+                      onChange={(e) => this.handleChangeText(`${e.target.value}`)} 
+                    />
+                    <InputGroupAddon addonType="prepend">
+                      <Button onClick={this.submitData}>
+                        Submit
+                      </Button>
+                    </InputGroupAddon>
+                  </InputGroup>
+                </Col>
+                <Col></Col>
+                <Col></Col>
+              </Row>
+            </Nav>
+          </Collapse>
         </Navbar>
-        <Row>
+        <Row className="test">
           <Col xs={9} className="main"></Col>
           <Col className="sideBar">
             <Col>
               <h3 className="centered" id="tit">
                 Starting Set
               </h3>
-              <h1 className="centered" id="bod">
+              <h3 className="centered" id="bod">
                 {this.state.startingSet}
-              </h1>
-              <Fade in={this.state.fadeIn} tag="h5" className="mt-3">
-                <InputGroup>
-                  <Input 
-                    placeholder="Amount" 
-                    defaultValue={30}
-                    min={0} 
-                    max={100} 
-                    type="number" 
-                    step="1" 
-                    onChange={(e) => this.handleChangeText(`${e.target.value}`)} 
-                  />
-                  <InputGroupAddon addonType="prepend">
-                    <Button onClick={this.submitData}>
-                      Submit
-                    </Button>
-                  </InputGroupAddon>
-                </InputGroup>
-              </Fade>
-              
+              </h3>
             </Col>
             <Col>
               <h3 className="centered" id="tit">
                 Position
               </h3>
-              <h1 className="centered" id="bod">
+              <h3 className="centered" id="bod">
                 {this.state.status}
-              </h1>
+              </h3>
             </Col>
             <Col>
               <h3 className="centered" id="tit">
                 Current Set
               </h3>
-              <h1 className="centered" id="bod">
+              <h3 className="centered" id="bod">
                 {this.state.setCounter}
-              </h1>
+              </h3>
             </Col>
             <Col>
               <h3 className="centered" id="tit">
                 Current Rep
               </h3>
-              <h1 className="centered" id="bod">
+              <h3 className="centered" id="bod">
                 {this.state.repCounter}
-              </h1>
+              </h3>
             </Col>
           </Col>
         </Row>
