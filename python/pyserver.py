@@ -75,15 +75,19 @@ def handle_request():
 @app.route("/submitData", methods=['GET', 'POST'])
 def handle_request2():
     print('Sumbit Data')
-    req = request.args.get('startingSet')
-    try:
-        val = int(req)
-        data['setCounter'] = val
-        print(data)
-        return 'Success'
-    except Exception as e:
-        print(e)
-        return 'Failure'
+    posibleReq = ['setCounter','lineHeight', 'threshold']
+    for var in posibleReq:
+        req = request.args.get(var)
+        if req != None:
+            try:
+                val = int(req)
+                data[var] = val
+                print(data)
+                return 'Success'
+            except Exception as e:
+                print(e)
+                return 'Failure'
+    return 'Failure'
     
     
 if __name__ == "__main__":

@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import "./App.css";
 import "./styles.css"
 import {
   Container,
@@ -31,6 +30,8 @@ class App extends Component {
       setCounter: 0,
       repCounter: 0,
       startingSet:30,
+      lineHieght:300,
+      threshold:5,
       fadeIn:true,
       collapsed:true,
       setCollapsed:true
@@ -78,7 +79,7 @@ class App extends Component {
 
   submitData = () => {
     console.log('Submit Data')
-    var path = 'http://127.0.0.1:5000/submitData?startingSet=' + String(this.state.startingSet)
+    var path = 'http://127.0.0.1:5000/submitData?setCounter=' + String(this.state.startingSet)
     fetch(path, {method: "POST"})
     .then((response) => response.json())
     .then((responseData) =>
@@ -91,8 +92,44 @@ class App extends Component {
     });
   };
 
-  handleChangeText(newText){
+  submitDataLine = () => {
+    console.log('Submit Data')
+    var path = 'http://127.0.0.1:5000/submitData?lineHeight=' + String(this.state.lineHieght)
+    fetch(path, {method: "POST"})
+    .then((response) => response.json())
+    .then((responseData) =>
+    {
+      //set your data here
+      console.log(responseData);
+    })
+    .catch((error) => {
+        console.error(error);
+    });
+  };
+
+  submitDataThreshold = () => {
+    console.log('Submit Data')
+    var path = 'http://127.0.0.1:5000/submitData?threshold=' + String(this.state.threshold)
+    fetch(path, {method: "POST"})
+    .then((response) => response.json())
+    .then((responseData) =>
+    {
+      //set your data here
+      console.log(responseData);
+    })
+    .catch((error) => {
+        console.error(error);
+    });
+  };
+
+  handleChangeTextSet(newText){
     this.setState({ startingSet: newText });
+  }
+  handleChangeTextLine(newText){
+    this.setState({ lineHieght: newText });
+  }
+  handleChangeTextThreshold(newText){
+    this.setState({ threshold: newText });
   }
 
   toggleNavbar = ()=>{
@@ -115,16 +152,16 @@ class App extends Component {
             <Nav navbar>
               <Row className="test">
                 <Col>
-                  <h3 className="settingsH3">Starting Set:</h3>
+                  <h4 className="settingsH4">Starting Set:</h4>
                   <InputGroup>
                     <Input 
                       placeholder="Amount" 
                       defaultValue={30}
-                      min={0} 
+                      min={1} 
                       max={100} 
                       type="number" 
                       step="1" 
-                      onChange={(e) => this.handleChangeText(`${e.target.value}`)} 
+                      onChange={(e) => this.handleChangeTextSet(`${e.target.value}`)} 
                     />
                     <InputGroupAddon addonType="prepend">
                       <Button onClick={this.submitData}>
@@ -133,46 +170,100 @@ class App extends Component {
                     </InputGroupAddon>
                   </InputGroup>
                 </Col>
-                <Col></Col>
-                <Col></Col>
+                <Col>
+                  <h4 className="settingsH4">Line Height:</h4>
+                  <InputGroup>
+                    <Input 
+                      placeholder="Amount" 
+                      defaultValue={200}
+                      min={1} 
+                      max={640} 
+                      type="number" 
+                      step="5" 
+                      onChange={(e) => this.handleChangeTextLine(`${e.target.value}`)} 
+                    />
+                    <InputGroupAddon addonType="prepend">
+                      <Button onClick={this.submitDataLine}>
+                        Submit
+                      </Button>
+                    </InputGroupAddon>
+                  </InputGroup>
+                </Col>
+                <Col>
+                  <h4 className="settingsH4">Threshold:</h4>
+                  <InputGroup>
+                    <Input 
+                      placeholder="Amount" 
+                      defaultValue={5}
+                      min={1} 
+                      max={20} 
+                      type="number" 
+                      step="1" 
+                      onChange={(e) => this.handleChangeTextThreshold(`${e.target.value}`)} 
+                    />
+                    <InputGroupAddon addonType="prepend">
+                      <Button onClick={this.submitDataThreshold}>
+                        Submit
+                      </Button>
+                    </InputGroupAddon>
+                  </InputGroup>
+                </Col>
               </Row>
             </Nav>
           </Collapse>
         </Navbar>
         <Row className="test">
-          <Col xs={9} className="main"></Col>
-          <Col className="sideBar">
+          <Col xs={9}>
+            <img className="img"></img>
+          </Col>
+          <Col>
             <Col>
-              <h3 className="centered" id="tit">
+              <h3 className="centered">
                 Starting Set
               </h3>
-              <h3 className="centered" id="bod">
+              <h4 className="centered">
                 {this.state.startingSet}
-              </h3>
+              </h4>
             </Col>
             <Col>
-              <h3 className="centered" id="tit">
+              <h3 className="centered">
+                Line Height
+              </h3>
+              <h4 className="centered">
+                {this.state.lineHieght}
+              </h4>
+            </Col>
+            <Col>
+              <h3 className="centered">
+                Threshold
+              </h3>
+              <h4 className="centered">
+                {this.state.threshold}
+              </h4>
+            </Col>
+            <Col>
+              <h3 className="centered">
                 Position
               </h3>
-              <h3 className="centered" id="bod">
+              <h4 className="centered">
                 {this.state.status}
-              </h3>
+              </h4>
             </Col>
             <Col>
-              <h3 className="centered" id="tit">
+              <h3 className="centered">
                 Current Set
               </h3>
-              <h3 className="centered" id="bod">
+              <h4 className="centered">
                 {this.state.setCounter}
-              </h3>
+              </h4>
             </Col>
             <Col>
-              <h3 className="centered" id="tit">
+              <h3 className="centered">
                 Current Rep
               </h3>
-              <h3 className="centered" id="bod">
+              <h4 className="centered">
                 {this.state.repCounter}
-              </h3>
+              </h4>
             </Col>
           </Col>
         </Row>
