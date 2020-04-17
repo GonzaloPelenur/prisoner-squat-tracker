@@ -30,7 +30,7 @@ class App extends Component {
       setCounter: 0,
       repCounter: 0,
       startingSet:30,
-      lineHieght:300,
+      lineHieght:200,
       threshold:5,
       fadeIn:true,
       collapsed:true,
@@ -152,7 +152,7 @@ class App extends Component {
             <Nav navbar>
               <Row className="test">
                 <Col>
-                  <h4 className="settingsH4">Starting Set:</h4>
+                  <h4 className="settingsH4">Starting Set: {this.state.startingSet}</h4>
                   <InputGroup>
                     <Input 
                       placeholder="Amount" 
@@ -171,7 +171,7 @@ class App extends Component {
                   </InputGroup>
                 </Col>
                 <Col>
-                  <h4 className="settingsH4">Line Height:</h4>
+                  <h4 className="settingsH4">Line Height: {this.state.lineHieght}</h4>
                   <InputGroup>
                     <Input 
                       placeholder="Amount" 
@@ -190,7 +190,7 @@ class App extends Component {
                   </InputGroup>
                 </Col>
                 <Col>
-                  <h4 className="settingsH4">Threshold:</h4>
+                  <h4 className="settingsH4">Threshold: {this.state.threshold}</h4>
                   <InputGroup>
                     <Input 
                       placeholder="Amount" 
@@ -217,30 +217,6 @@ class App extends Component {
             <img className="img"></img>
           </Col>
           <Col>
-            <Col>
-              <h3 className="centered">
-                Starting Set
-              </h3>
-              <h4 className="centered">
-                {this.state.startingSet}
-              </h4>
-            </Col>
-            <Col>
-              <h3 className="centered">
-                Line Height
-              </h3>
-              <h4 className="centered">
-                {this.state.lineHieght}
-              </h4>
-            </Col>
-            <Col>
-              <h3 className="centered">
-                Threshold
-              </h3>
-              <h4 className="centered">
-                {this.state.threshold}
-              </h4>
-            </Col>
             <Col>
               <h3 className="centered">
                 Position
