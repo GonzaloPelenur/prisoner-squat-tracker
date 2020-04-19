@@ -34,16 +34,50 @@ class App extends Component {
       threshold:5,
       fadeIn:true,
       collapsed:true,
-      setCollapsed:true
+      setCollapsed:true,
+      time: 0,
+      showTime:'0',
+      isOn: false,
+      start: 0
     }
+    this.startTimer = this.startTimer.bind(this)
+    this.stopTimer = this.stopTimer.bind(this)
+    this.resetTimer = this.resetTimer.bind(this)
+  }
+
+  startTimer() {
+    if(!this.state.isOn){
+      this.setState({
+        time: this.state.time,
+        start: Date.now() - this.state.time,
+        isOn: true
+      })
+      
+      this.timer = setInterval(() => {
+        var fullTime = Date.now() - this.state.start
+        var strTime = fullTime.toString().substr(0, fullTime.toString().length - 3)
+        this.setState({
+        time: Date.now() - this.state.start,
+        showTime: strTime
+      })
+      } , 1);
+    }
+  }
+  stopTimer() {
+    this.setState({isOn: false})
+    clearInterval(this.timer)
+  }
+  resetTimer() {
+    this.setState({isOn: false, time: 0, showTime:'0'})
+    clearInterval(this.timer)
   }
   
   componentDidMount() {
-    this.timer = setInterval(() => this.fecthInfo(), 500);
+    this.timer1 = setInterval(() => this.fecthInfo(), 500);
   }
   
   async fecthInfo() {
-    console.log('Call Python')
+    console.log('Fecht Data')
     fetch('http://127.0.0.1:5000/data', {method: "POST"})
     .then((response) => response.json())
     .then((responseData) =>
@@ -55,6 +89,14 @@ class App extends Component {
         repCounter: responseData.repCounter,
         setCounter: responseData.setCounter,
       });
+      if(responseData.startTimer){
+        console.log('Start Timer')
+        this.startTimer()
+      }
+      else{
+        console.log('Reset Timer')
+        this.resetTimer()
+      }
       console.log(responseData);
     })
     .catch((error) => {
@@ -63,7 +105,7 @@ class App extends Component {
   }
 
   runPython = () => {
-    console.log('Call Python')
+    console.log('Start Video')
     this.setState({fadeIn:false})
     fetch('http://127.0.0.1:5000/start', {method: "POST"})
     .then((response) => response.json())
@@ -127,6 +169,17 @@ class App extends Component {
   }
   handleChangeTextLine(newText){
     this.setState({ lineHieght: newText });
+    var path = 'http://127.0.0.1:5000/submitData?lineHeight=' + String(this.state.lineHieght)
+    fetch(path, {method: "POST"})
+    .then((response) => response.json())
+    .then((responseData) =>
+    {
+      //set your data here
+      console.log(responseData);
+    })
+    .catch((error) => {
+        console.error(error);
+    });
   }
   handleChangeTextThreshold(newText){
     this.setState({ threshold: newText });
@@ -176,8 +229,8 @@ class App extends Component {
                     <Input 
                       placeholder="Amount" 
                       defaultValue={200}
-                      min={1} 
-                      max={640} 
+                      min={50} 
+                      max={425} 
                       type="number" 
                       step="5" 
                       onChange={(e) => this.handleChangeTextLine(`${e.target.value}`)} 
@@ -217,6 +270,14 @@ class App extends Component {
             <img className="img"></img>
           </Col>
           <Col>
+            <Col>
+              <h3 className="centered">
+                Timer:
+              </h3>
+              <h4 className="centered">
+                {this.state.showTime}
+              </h4>
+            </Col>
             <Col>
               <h3 className="centered">
                 Position

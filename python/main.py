@@ -63,7 +63,7 @@ def run(lineHeight, threshold, setCounter):
         if setCounter == 0:
             break
 
-        img = cv2.line(img,(0,lineHeight),(vidWidth,lineHeight),(0,0,0),1)
+        img = cv2.line(img,(0,lineHeight),(vidWidth,lineHeight),(0,0,255),1)
         #img = cv2.putText(img, 'Rep Counter: '+str(repCounter), (100,300), cv2.FONT_HERSHEY_SIMPLEX,1,thickness=1,color=[255,255,255])
         #img = cv2.putText(img, 'Set Counter: '+str(setCounter), (100,400), cv2.FONT_HERSHEY_SIMPLEX,1,thickness=1,color=[255,255,255])
         putText(img, 'Rep Counter: '+str(repCounter),(0,0,0), 100,350)
@@ -83,7 +83,7 @@ def run(lineHeight, threshold, setCounter):
     cap.release()
     cv2.destroyAllWindows()
 
-def runOnSingleFrame(img,lineHeight, threshold, setCounter, face_cascade, vidWidth, statusUp, statusDown, up, repCounter):
+def runOnSingleFrame(img,lineHeight, threshold, setCounter, face_cascade, vidWidth, statusUp, statusDown, up, repCounter, startTimer):
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     faces = face_cascade.detectMultiScale(gray, 1.1, 4)
     for (x, y, w, h) in faces:
@@ -96,6 +96,8 @@ def runOnSingleFrame(img,lineHeight, threshold, setCounter, face_cascade, vidWid
             statusDown.append(False)
             if all(statusUp[-threshold:]):
                 if not up:
+                    if startTimer:
+                        startTimer = False
                     repCounter += 1
                     up = True
                     print('UP')
@@ -116,11 +118,12 @@ def runOnSingleFrame(img,lineHeight, threshold, setCounter, face_cascade, vidWid
         repCounter = 0
         setCounter -= 1
         print('Starting set', setCounter)
+        startTimer = True
 
     #if setCounter == 0:
         #break
 
-    img = cv2.line(img,(0,lineHeight),(vidWidth,lineHeight),(0,0,0),1)
+    img = cv2.line(img,(0,lineHeight),(vidWidth,lineHeight),(0,0,255),1)
     #img = cv2.putText(img, 'Rep Counter: '+str(repCounter), (100,300), cv2.FONT_HERSHEY_SIMPLEX,1,thickness=1,color=[255,255,255])
     #img = cv2.putText(img, 'Set Counter: '+str(setCounter), (100,400), cv2.FONT_HERSHEY_SIMPLEX,1,thickness=1,color=[255,255,255])
     putText(img, 'Rep Counter: '+str(repCounter),(0,0,0), 100,350)
@@ -132,7 +135,7 @@ def runOnSingleFrame(img,lineHeight, threshold, setCounter, face_cascade, vidWid
         putText(img, 'Status: Down',(0,0,0), 250,400)
         position = 'Down'
 
-    return img, statusUp, statusDown, up, setCounter, repCounter, position
+    return img, statusUp, statusDown, up, setCounter, repCounter, position, startTimer
 
 
     '''
